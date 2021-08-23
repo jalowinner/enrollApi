@@ -1,0 +1,368 @@
+openapi: 3.0.0
+info:
+  title: Course Enrollment API
+  description: A course enrollment api for students to login and sign up for courses
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+
+  
+paths:
+  /login:
+    description:  user or admin login
+    post:
+      description: send login request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: jalowinner
+                password:
+                  type: string
+                  example: 19960831
+                role:
+                  type: string
+                  example: admin
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  username:
+                    type: string
+                    example: jack
+                  role:
+                    type: string
+                    example: admin
+                  token:
+                    type: string
+                    example: "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsdW8iLCJhdXRoIjoidXNlciIsImlhdCI6MTYyOTcwMTIyOSwiZXhwIjoxNjI5NzA0ODI5fQ.7Ooy2mgg9c7LHaucMDWZiPz4x8KJHuidC6nR3R_ALS4"
+                
+          description: login success
+        401:
+          description: user doesn't exist/Wrong username or password
+  
+  /signup:
+    description:  user signup
+    post:
+      description: send registration request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: jalowinner
+                password:
+                  type: string
+                  example: 19960831
+      responses:
+        201:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: registration success
+                
+          description: registration success
+        401:
+          description: user exists/ registration failure
+  
+  /removeuser:
+    description: admin remove a user
+    delete:
+      security:
+        - BearerAuth: []
+      description: admin remove a user     !//authorized method (need to put token in Authorization in header)//
+      parameters:
+        - in: query
+          name: username
+          schema:
+            type: string
+          required: true
+          example: john doe
+      responses:
+        200:
+          description: successfully removed
+        404:
+          description: user not exists
+        403:
+          description: forbidden
+  /listusers:
+    description: admin get all users
+    get:
+      security:
+        - BearerAuth: []
+      description: admin get all users      !//authorized method (need to put token in Authorization in header)//
+      responses:
+        200:
+          description: success
+        403:
+          description: forbidden
+  /search:
+    description: list all courses 
+    get:
+      security:
+        - BearerAuth: []
+      description: request for all courses info      !//authorized method (need to put token in Authorization in header)//
+      responses:
+        200:
+          description: search success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/course'
+        403:
+          description: forbidden
+              
+  /enrolled:
+    description: user check enrolled courses info
+    get:
+      security:
+        - BearerAuth: []
+      description: request for enrolled courses info      !//authorized method (need to put token in Authorization in header)//
+      responses:
+        200:
+          description: search success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/course'
+        403:
+          description: forbidden
+  
+  /finished:
+    description: user check finished courses info
+    get:
+      security:
+        - BearerAuth: []
+      description: request for finished courses info      !//authorized method (need to put token in Authorization in header)//
+      responses:
+        200:
+          description: search success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/course'
+        403:
+          description: forbidden
+  
+  /enroll:
+    description: enroll a course
+    post:
+      security:
+        - BearerAuth: []
+      description: enroll in a course      !//authorized method (need to put token in Authorization in header)//
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                coursename:
+                  type: string
+                  example: csc222
+      responses:
+        201:
+          description: successfully enrolled
+        409:
+          description: course already enrolled
+        404:
+          description: course not found
+        403:
+          description: forbidden
+  
+  /withdraw:
+    description: withdraw from a course
+    delete:
+      security:
+        - BearerAuth: []
+      description: withdraw from a course      !//authorized method (need to put token in Authorization in header)//
+      parameters:
+        - in: query
+          name: coursename
+          schema:
+            type: string
+          required: true
+          example: csc222
+      responses:
+        200:
+          description: successfully withdrawn
+        404:
+          description: course not enrolled
+        403:
+          description: forbidden
+  
+  /addCourse:
+    description: admin add a course
+    post:
+      security:
+        - BearerAuth: []
+      description: admin add a course      !//authorized method (need to put token in Authorization in header)//
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                coursename:
+                  type: string
+                  example: csc222
+                courseTitle:
+                  type: string
+                  example: intro to xxx
+                instructor:
+                  type: string
+                  example: john doe
+                workload:
+                  type: string
+                  example: 22
+      responses:
+        201:
+          description: successfully added
+        409:
+          description: course already exists
+        403:
+          description: forbidden
+  
+  /removecourse:
+    description: admin remove a course
+    delete:
+      security:
+        - BearerAuth: []
+      description: remove a course      !//authorized method (need to put token in Authorization in header)//
+      parameters:
+        - in: query
+          name: coursename
+          schema:
+            type: string
+          required: true
+          example: csc222
+      responses:
+        200:
+          description: successfully removed
+        404:
+          description: course not exists
+        403:
+          description: forbidden
+  
+  /getUserCourse:
+    description: admin get all courses enrolled by a user
+    get:
+      security:
+        - BearerAuth: []
+      description: get enrolled courses of a user      !//authorized method (need to put token in Authorization in header)//
+      parameters:
+        - in: query
+          name: username
+          schema:
+            type: string
+          required: true
+          example: john doe
+      responses:
+        200:
+          description: success
+        404:
+          description: user not exists
+        403:
+          description: forbidden
+  
+  /passAction:
+    description: admin let a user pass a course
+    post:
+      security:
+        - BearerAuth: []
+      description: admin let a user pass a course     !//authorized method (need to put token in Authorization in header)//
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: john
+                coursename:
+                  type: string
+                  example: csc222
+      responses:
+        201:
+          description: success
+        404:
+          description: user/course not found
+        403:
+          description: forbidden
+  
+  /adminWithdraw:
+    description: admin remove a user from a course
+    delete:
+      security:
+        - BearerAuth: []
+      description: admin remove a user from a course      !//authorized method (need to put token in Authorization in header)//
+      parameters:
+        - in: query
+          name: coursename
+          schema:
+            type: string
+          required: true
+          example: csc222
+        - in: query
+          name: username
+          schema:
+            type: string
+          required: true
+          example: john
+      responses:
+        200:
+          description: successfully removed
+        404:
+          description: user/course not exists/not enrolled
+        403:
+          description: forbidden
+  
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+  schemas:
+    course:
+      properties:
+        id:
+          type: integer
+          example: 1
+        coursename:
+          type: string
+          example: CS241
+        courseTitle:
+          type: string
+          example: Introduction to Machine Learning
+        instructor:
+          type: string
+          example: Andrew Ng
+        workload:
+          type: string
+          example: 200
+  
+                    
+            
+          
+                  
+      
