@@ -1,0 +1,65 @@
+.margin-top {
+  margin-top : 50px;
+}
+.my-modal{
+  width: 90vw;
+  max-width: 90vw;
+}
+.content {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-flow: column;
+  padding: 1rem;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  /* bring your own prefixes */
+  transform: translate(-50%, -50%);
+}
+@keyframes blinker {
+  from {opacity: 1.0;}
+  to {opacity: 0.0;}
+}
+.ityped-cursor {
+  font-size: 3rem;
+  color: #888;
+  opacity: 1;
+  animation-name: blinker; 
+  animation-iteration-count: infinite; 
+  animation-timing-function: cubic-bezierr(1.0,0,0,1.0);
+  animation-duration: 0.6s;
+  text-align: center;
+}
+.title {
+  font-size: 6.6rem !important;
+}
+
+.ityped {
+  font-size: 3rem;
+  color: #888;
+}
+.bracket{
+  font-size: 5rem !important;
+}
+.welcome{
+  font-size: 5rem !important;
+  color: rgba(94, 69, 69, 0.589);
+  white-space: nowrap;
+}
+.welcometitle{
+  font-size: 7rem !important;
+  color: rgb(48, 46, 46);
+  white-space: nowrap;
+}
+.welcome-ityped-cursor{
+  font-size: 5rem !important;
+  color: rgba(94, 69, 69, 0.589);
+  opacity: 1;
+  animation-name: blinker; 
+  animation-iteration-count: infinite; 
+  animation-timing-function: cubic-bezierr(1.0,0,0,1.0);
+  animation-duration: 0.6s;
+  text-align: center;
+}
